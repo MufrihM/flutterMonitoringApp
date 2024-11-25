@@ -24,13 +24,6 @@ class _MyAppState extends State<MyApp> {
   String tempMessage = '';
   String humidMessage = '';
 
-  @override
-  void initState() {
-    super.initState();
-    mqttService.onMessageReceived = _onMessageReceived;
-    mqttService.connect();
-  }
-
   void _onMessageReceived(String topic, String message) {
     setState(() {
       if (topic == '/temp/demo') {
@@ -39,6 +32,13 @@ class _MyAppState extends State<MyApp> {
         humidMessage = message;
       }
     });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    mqttService.onMessageReceived = _onMessageReceived;
+    mqttService.connect();
   }
 
   @override
