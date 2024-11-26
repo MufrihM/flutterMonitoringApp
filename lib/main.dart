@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'mqtt/mqtt_service.dart';
 import 'services/api_service.dart';
 import 'pages/home.dart';
+import 'pages/login.dart';
+import 'components/loadingScreen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
   runApp(const MyApp());
@@ -50,10 +53,13 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: HomeScreen(
-        tempMessage: tempMessage,
-        humidMessage: humidMessage,
-      )
+      debugShowCheckedModeBanner: false,
+      initialRoute: '/',
+      routes: {
+        '/': (context) => LoadingScreen(),
+        '/login': (context) => LoginScreen(),
+        '/home': (context) => HomeScreen(tempMessage: tempMessage, humidMessage: humidMessage)
+      },
     );
   }
 }

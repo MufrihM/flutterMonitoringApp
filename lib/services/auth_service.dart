@@ -21,6 +21,12 @@ class AuthService{
   }
 
   //   Fungsi Registrasi
-  // Future<Map<String, dynamic>> register
-      
+  Future<bool> register(String email, String password) async {
+    final response = await http.post(
+      Uri.parse('$baseUrl/register'),
+      body: jsonEncode({'email': email, 'password': password}),
+      headers: {'Content-Type': 'application/json'},
+    );
+    return response.statusCode == 201;
+  }
 }
