@@ -16,17 +16,34 @@ class AuthService{
     if (response.statusCode == 200){
       return jsonDecode(response.body); //jwt token
     } else {
-      return {'error': 'Failed to login'};
+      // error handling
+      switch(response.statusCode){
+        case 400:
+          return {
+            'message': jsonDecode(response.body)['message'],
+            'access_token': null
+          };
+        case 401:
+          return{
+            'message': 'Username atau password salah',
+            'access_token': null
+          };
+        default:
+          return{
+            'message': 'Error tidak diketahui: ${response.statusCode}',
+            'access_token': null
+          };
+      }
     }
   }
 
   //   Fungsi Registrasi
-  Future<bool> register(String email, String password) async {
+  Future<bool> register(String username, String email, String password) async {
     final response = await http.post(
       Uri.parse('$baseUrl/register'),
-      body: jsonEncode({'email': email, 'password': password}),
+      body: jsonEncode({'username': username, 'email': email, 'password': password}),
       headers: {'Content-Type': 'application/json'},
     );
-    return response.statusCode == 201;
+    return response.statusCode == 200;
   }
 }

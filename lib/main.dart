@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:monitoring_app/pages/register.dart';
 import 'mqtt/mqtt_service.dart';
 import 'services/api_service.dart';
 import 'pages/home.dart';
@@ -58,6 +59,7 @@ class _MyAppState extends State<MyApp> {
       routes: {
         '/': (context) => LoadingScreen(),
         '/login': (context) => LoginScreen(),
+        '/register': (context) => RegisterScreen(),
         '/home': (context) => HomeScreen(tempMessage: tempMessage, humidMessage: humidMessage)
       },
     );

@@ -2,17 +2,19 @@ import 'package:flutter/material.dart';
 import '../services/auth_service.dart';
 
 class RegisterScreen extends StatelessWidget {
-  final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController usernameController = TextEditingController();
 
   Future<void> _register(BuildContext context) async {
     final email = emailController.text;
     final password = passwordController.text;
+    final username = usernameController.text;
 
     final auth = AuthService();
-    final success = await auth.register(email, password);
+    final response = await auth.register(username, email, password);
 
-    if (success) {
+    if (response) {
       Navigator.pop(context); // Kembali ke halaman login
     } else {
       showDialog(
@@ -36,7 +38,13 @@ class RegisterScreen extends StatelessWidget {
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            TextField(controller: emailController, decoration: InputDecoration(labelText: 'Email')),
+            TextField(
+              controller: usernameController,
+              decoration: InputDecoration(labelText: 'Username'),
+            ),
+            TextField(
+                controller: emailController,
+                decoration: InputDecoration(labelText: 'Email')),
             TextField(
               controller: passwordController,
               decoration: InputDecoration(labelText: 'Password'),

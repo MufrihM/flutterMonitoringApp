@@ -3,20 +3,20 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../services/auth_service.dart';
 
 class LoginScreen extends StatelessWidget {
-  final TextEditingController emailController = TextEditingController();
+  final TextEditingController usernameController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
   Future<void> _login(BuildContext context) async {
-    final email = emailController.text;
+    final username = usernameController.text;
     final password = passwordController.text;
 
     final api = AuthService();
-    final response = await api.login(email, password);
+    final response = await api.login(username, password);
 
-    if (response['success']) {
+    if (response != null && response['access_token'] != null) {
       final prefs = await SharedPreferences.getInstance();
-      await prefs.setString('jwt_token', response['token']);
-      Navigator.pushReplacementNamed(context, '/home');
+      await prefs.setString('jwt_token', response['access_token']);
+      Navigator.pushReplacementNamed(context, '/');
     } else {
       showDialog(
         context: context,
@@ -39,7 +39,9 @@ class LoginScreen extends StatelessWidget {
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            TextField(controller: emailController, decoration: InputDecoration(labelText: 'Email')),
+            TextField(
+                controller: usernameController,
+                decoration: InputDecoration(labelText: 'Username')),
             TextField(
               controller: passwordController,
               decoration: InputDecoration(labelText: 'Password'),
