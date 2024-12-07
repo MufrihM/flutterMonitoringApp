@@ -1,49 +1,31 @@
 import 'package:flutter/material.dart';
 
 class HomeScreen extends StatelessWidget {
-  final String tempMessage;
-  final String humidMessage;
-
-  // Constructor untuk menerima data dari main.dart
-  HomeScreen({required this.tempMessage, required this.humidMessage});
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        toolbarHeight: 60,
-        title: Padding(
-          padding: EdgeInsets.all(10),
-          child: const Text(
-            'Monitoring App',
-            style: TextStyle(
-              fontSize: 25,
-              fontWeight: FontWeight.w700,
-            ),
-          ),
+        title: const Text(
+          'Pemantauan Suhu & Kelembapan',
+          style: TextStyle(fontSize: 18),
         ),
         centerTitle: true,
         backgroundColor: Colors.blue,
         actions: [
-          Padding(
-              padding: const EdgeInsets.only(right: 18),
-              child: GestureDetector(
-                onTap: () {
-                //   Aksi ketika icon diklik
-                },
-                child: Icon(
-                    Icons.person,
-                    size: 30,
-                  ),
-                ),
-              ),
+          IconButton(
+            onPressed: () {
+              // Aksi untuk profil pengguna
+            },
+            icon: const Icon(Icons.person),
+          ),
         ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            // ========== SUHU ============
+            // Container untuk data suhu
             Container(
               padding: const EdgeInsets.all(16.0),
               decoration: BoxDecoration(
@@ -59,37 +41,38 @@ class HomeScreen extends StatelessWidget {
                 ],
               ),
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
+                  const Icon(
+                    Icons.thermostat,
+                    size: 50,
+                    color: Colors.blue,
+                  ),
+                  const SizedBox(width: 16),
                   Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: const [
                       Text(
-                          'Suhu',
-                          style: TextStyle(
-                            fontSize: 30,
-                            fontWeight: FontWeight.w700
-                          ),
-                      ),
-                      const SizedBox(height: 8),
-                      Text(
-                        '$tempMessage', // Data suhu ditampilkan di sini
+                        'Suhu',
                         style: TextStyle(
-                          fontSize: 50,
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      SizedBox(height: 8),
+                      Text(
+                        '25°C', // Data suhu ditampilkan di sini
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: Colors.grey,
                         ),
                       ),
                     ],
-                  ),
-                  const SizedBox(width: 16),
-                  Icon(
-                    Icons.thermostat,
-                    size: 100,
                   ),
                 ],
               ),
             ),
             const SizedBox(height: 20),
-            // ========== Kelembapan ============
+            // Container untuk data kelembapan
             Container(
               padding: const EdgeInsets.all(16.0),
               decoration: BoxDecoration(
@@ -105,31 +88,32 @@ class HomeScreen extends StatelessWidget {
                 ],
               ),
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
+                  const Icon(
+                    Icons.water_drop,
+                    size: 50,
+                    color: Colors.blue,
+                  ),
+                  const SizedBox(width: 16),
                   Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: const [
                       Text(
                         'Kelembapan',
                         style: TextStyle(
-                          fontSize: 30,
-                          fontWeight: FontWeight.w700,
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
                       SizedBox(height: 8),
                       Text(
-                        '$humidMessage %', // Data kelembapan ditampilkan di sini
+                        '60%', // Data kelembapan ditampilkan di sini
                         style: TextStyle(
-                          fontSize: 50,
+                          fontSize: 16,
+                          color: Colors.grey,
                         ),
                       ),
                     ],
-                  ),
-                  const SizedBox(width: 16),
-                  const Icon(
-                    Icons.water_drop,
-                    size: 100,
                   ),
                 ],
               ),
