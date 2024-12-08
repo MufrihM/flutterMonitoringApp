@@ -1,4 +1,3 @@
-// lib/message_data.dart
 class MessageData {
   final String message;
   final String timeStamp;

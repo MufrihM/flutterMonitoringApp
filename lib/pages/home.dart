@@ -73,7 +73,7 @@ class HomeScreen extends StatelessWidget {
                       ),
                       const SizedBox(height: 8),
                       Text(
-                        '$tempMessage', // Data suhu ditampilkan di sini
+                        '$tempMessage \u00B0C', // Data suhu ditampilkan di sini
                         style: TextStyle(
                           fontSize: 50,
                         ),
