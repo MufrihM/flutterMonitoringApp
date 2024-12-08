@@ -5,7 +5,7 @@ import 'services/api_service.dart';
 import 'pages/home.dart';
 import 'pages/login.dart';
 import 'components/loadingScreen.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'pages/detailSuhu.dart';
 
 void main() {
   runApp(const MyApp());
@@ -60,7 +60,8 @@ class _MyAppState extends State<MyApp> {
         '/': (context) => LoadingScreen(),
         '/login': (context) => LoginScreen(),
         '/register': (context) => RegisterScreen(),
-        '/home': (context) => HomeScreen(tempMessage: tempMessage, humidMessage: humidMessage)
+        '/home': (context) => HomeScreen(tempMessage: tempMessage, humidMessage: humidMessage),
+        '/suhu': (context) => TemperatureScreen()
       },
     );
   }
