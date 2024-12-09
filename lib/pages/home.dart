@@ -141,15 +141,15 @@ class HomeScreen extends StatelessWidget {
         items: const [
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
-            label: 'Beranda',
+            label: 'home',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.thermostat),
-            label: 'Suhu',
+            label: 'suhu',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.water_drop),
-            label: 'Kelembapan',
+            label: 'kelembapan',
           ),
         ],
         selectedItemColor: Colors.blue,

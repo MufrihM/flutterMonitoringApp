@@ -4,8 +4,9 @@ import 'mqtt/mqtt_service.dart';
 import 'services/api_service.dart';
 import 'pages/home.dart';
 import 'pages/login.dart';
-import 'components/loadingScreen.dart';
-import 'pages/detailSuhu.dart';
+import 'components/loading_screen.dart';
+import 'pages/detail_suhu.dart';
+import 'pages/detail_lembap.dart';
 
 void main() {
   runApp(const MyApp());
@@ -61,7 +62,8 @@ class _MyAppState extends State<MyApp> {
         '/login': (context) => LoginScreen(),
         '/register': (context) => RegisterScreen(),
         '/home': (context) => HomeScreen(tempMessage: tempMessage, humidMessage: humidMessage),
-        '/suhu': (context) => TemperatureScreen()
+        '/suhu': (context) => TemperatureScreen(),
+        '/kelembapan': (context) => RiwayatSuhuPage()
       },
     );
   }

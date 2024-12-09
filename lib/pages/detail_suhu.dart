@@ -69,15 +69,15 @@ class _TemperatureScreenState extends State<TemperatureScreen> {
         items: const [
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
-            label: 'Home',
+            label: 'home',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.thermostat),
-            label: 'Temperature',
+            label: 'suhu',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.water),
-            label: 'Humidity',
+            label: 'kelembapan',
           ),
         ],
         currentIndex: 1, // Indeks halaman suhu
