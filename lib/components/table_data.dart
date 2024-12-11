@@ -17,7 +17,7 @@ class TableData extends StatelessWidget {
     return Column(
       children: [
         Text(
-          '$tableName',
+          "$tableName",
           style: const TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.bold,

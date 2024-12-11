@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import '../components/custom_app_bar.dart';
+import '../components/custom_bottom_navbar.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   final String tempMessage;
   final String humidMessage;
 
@@ -8,37 +10,14 @@ class HomeScreen extends StatelessWidget {
   HomeScreen({required this.tempMessage, required this.humidMessage});
 
   @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        toolbarHeight: 60,
-        title: Padding(
-          padding: EdgeInsets.all(10),
-          child: const Text(
-            'Monitoring App',
-            style: TextStyle(
-              fontSize: 25,
-              fontWeight: FontWeight.w700,
-            ),
-          ),
-        ),
-        centerTitle: true,
-        backgroundColor: Colors.blue,
-        actions: [
-          Padding(
-              padding: const EdgeInsets.only(right: 18),
-              child: GestureDetector(
-                onTap: () {
-                //   Aksi ketika icon diklik
-                },
-                child: Icon(
-                    Icons.person,
-                    size: 30,
-                  ),
-                ),
-              ),
-        ],
-      ),
+      appBar: CustomAppBar(pageName: "Monitoring App"),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -64,7 +43,7 @@ class HomeScreen extends StatelessWidget {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Text(
+                      const Text(
                           'Suhu',
                           style: TextStyle(
                             fontSize: 30,
@@ -73,15 +52,15 @@ class HomeScreen extends StatelessWidget {
                       ),
                       const SizedBox(height: 8),
                       Text(
-                        '$tempMessage \u00B0C', // Data suhu ditampilkan di sini
-                        style: TextStyle(
+                        '${widget.tempMessage} \u00B0C', // Data suhu ditampilkan di sini
+                        style: const TextStyle(
                           fontSize: 50,
                         ),
                       ),
                     ],
                   ),
                   const SizedBox(width: 16),
-                  Icon(
+                  const Icon(
                     Icons.thermostat,
                     size: 100,
                   ),
@@ -110,17 +89,17 @@ class HomeScreen extends StatelessWidget {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Text(
+                      const Text(
                         'Kelembapan',
                         style: TextStyle(
                           fontSize: 30,
                           fontWeight: FontWeight.w700,
                         ),
                       ),
-                      SizedBox(height: 8),
+                      const SizedBox(height: 8),
                       Text(
-                        '$humidMessage %', // Data kelembapan ditampilkan di sini
-                        style: TextStyle(
+                        '${widget.humidMessage} %', // Data kelembapan ditampilkan di sini
+                        style: const TextStyle(
                           fontSize: 50,
                         ),
                       ),
@@ -137,40 +116,7 @@ class HomeScreen extends StatelessWidget {
           ],
         ),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.thermostat),
-            label: 'suhu',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.water_drop),
-            label: 'kelembapan',
-          ),
-        ],
-        selectedItemColor: Colors.blue,
-        unselectedItemColor: Colors.grey,
-        onTap: (index) {
-          // Aksi navigasi berdasarkan indeks tombol navbar
-          switch (index) {
-            case 0:
-            // Beranda
-              break;
-            case 1:
-            // Navigasi ke halaman suhu
-              Navigator.pushNamed(context, '/suhu');
-              break;
-            case 2:
-            // Navigasi ke halaman kelembapan
-              Navigator.pushNamed(context, '/kelembapan');
-              break;
-          }
-        },
-      ),
+      bottomNavigationBar: const CustomBottomNavigationBar(currentIndex: 0),
     );
   }
 }

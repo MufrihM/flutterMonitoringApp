@@ -3,6 +3,8 @@ import 'package:fl_chart/fl_chart.dart';
 import '../components/data_terkini.dart';
 import '../components/grafik_data.dart';
 import '../components/table_data.dart';
+import '../components/custom_app_bar.dart';
+import '../components/custom_bottom_navbar.dart';
 
 class RiwayatSuhuPage extends StatefulWidget {
   const RiwayatSuhuPage({Key? key}) : super(key: key);
@@ -14,14 +16,15 @@ class RiwayatSuhuPage extends StatefulWidget {
 class _RiwayatSuhuPageState extends State<RiwayatSuhuPage> {
   String currentData = "30.0";
   String dataName = "Suhu Terkini";
-  DateTime selectedDate = DateTime.now(); // Tanggal yang dipilih
+
   List<Map<String, dynamic>> temperatureData = List.generate(
-    500,
+    40,
         (index) => {
       'time': '${10 + index ~/ 10}:${(index % 10) * 6}'.padLeft(2, '0'),
-      'temperature': 25 + (index % 5) * 0.5,
+      'content': index.toDouble(),
     },
   ); // Dummy Data Riwayat Suhu
+
   List<Map<String, dynamic>> temperatureDetails = [
     {'id': 1, 'content': 27.5, 'time': '10:00'},
     {'id': 2, 'content': 28.0, 'time': '11:00'},
@@ -29,26 +32,11 @@ class _RiwayatSuhuPageState extends State<RiwayatSuhuPage> {
     {'id': 4, 'content': 28.5, 'time': '13:00'},
   ];
 
-  // Fungsi untuk memilih tanggal
-  Future<void> _selectDate(BuildContext context) async {
-    final DateTime? pickedDate = await showDatePicker(
-      context: context,
-      initialDate: selectedDate,
-      firstDate: DateTime(2022),
-      lastDate: DateTime.now(),
-    );
-    if (pickedDate != null && pickedDate != selectedDate) {
-      setState(() {
-        selectedDate = pickedDate;
-      });
-    }
-  }
-
   // Fungsi konversi data ke FlSpot
   List<FlSpot> getTemperatureSpots(List<Map<String, dynamic>> data) {
     return data.asMap().entries.map((entry) {
       String time = entry.value['time'];
-      double temperature = entry.value['temperature'];
+      double temperature = entry.value['content'];
       List<String> timeParts = time.split(':');
       double xValue =
           double.parse(timeParts[0]) + (double.parse(timeParts[1]) / 60);
@@ -57,40 +45,13 @@ class _RiwayatSuhuPageState extends State<RiwayatSuhuPage> {
     }).toList();
   }
 
-  final ScrollController _controller = ScrollController();
-
   @override
   Widget build(BuildContext context) {
     List<FlSpot> spots = getTemperatureSpots(temperatureData);
-    print(spots.length);
+    // print(spots.length);
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Riwayat Kelembapan"),
-        backgroundColor: Colors.blue,
-        centerTitle: true,
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.thermostat),
-            label: 'suhu',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.water_drop),
-            label: 'kelembapan',
-          ),
-        ],
-        currentIndex: 1, // Indeks halaman ini
-        onTap: (index) {
-          // Navigasi antar halaman
-        },
-        selectedItemColor: Colors.blue,
-      ),
+      appBar: const CustomAppBar(pageName: "Data Lembap"),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: SingleChildScrollView(
@@ -111,6 +72,7 @@ class _RiwayatSuhuPageState extends State<RiwayatSuhuPage> {
           ),
         ),
       ),
+      bottomNavigationBar: const CustomBottomNavigationBar(currentIndex: 2),
     );
   }
 }

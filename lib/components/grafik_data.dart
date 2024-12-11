@@ -4,8 +4,6 @@ import 'package:fl_chart/fl_chart.dart';
 class GrafikData extends StatefulWidget {
   final List<FlSpot> spotsData;
   final String grafikName;
-  // final DateTime dateData;
-  // final void dateData;
 
   const GrafikData({
     required this.spotsData,
@@ -35,6 +33,7 @@ class _GrafikDataState extends State<GrafikData> {
   }
   @override
   Widget build(BuildContext context) {
+    int lebar = widget.spotsData.length.toInt();
     return Column(
       children: [
         Row(
@@ -59,66 +58,75 @@ class _GrafikDataState extends State<GrafikData> {
         ),
         const SizedBox(height: 10),
         SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: Container(
-            width: 1200,
-            height: 300,
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              color: Colors.blue[50],
-              borderRadius: BorderRadius.circular(12),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.grey.withOpacity(0.3),
-                  spreadRadius: 2,
-                  blurRadius: 6,
-                  offset: const Offset(0, 3),
-                ),
-              ],
-            ),
-            child: LineChart(
-              LineChartData(
-                // clipData: FlClipData.none(),
-                gridData: const FlGridData(show: true),
-                titlesData: FlTitlesData(
-                  topTitles: const AxisTitles(
-                    sideTitles: SideTitles(
-                      showTitles: false,
-                    )
-                  ),
-                  rightTitles: const AxisTitles(
-                    sideTitles: SideTitles(
-                      showTitles: false,
-                    )
-                  ),
-                  bottomTitles: AxisTitles(
-                    sideTitles: SideTitles(
-                      showTitles: true,
-                      getTitlesWidget: (value, meta) {
-                        int hour = value.toInt();
-                        int minute = ((value-hour) * 60).toInt();
-                        return Text('$hour: ${minute.toString().padLeft(2, '0')}');
-                      }
-                    )
-                  ),
-                  leftTitles: AxisTitles(
-                    sideTitles: SideTitles(
-                      showTitles: true,
-                      getTitlesWidget: (value, meta) {
-                        return Text('${value.toInt()} \u00B0C');
-                      }
-                    )
-                  )
-                ),
-                borderData: FlBorderData(show: false),
-                lineBarsData: [
-                  LineChartBarData(
-                    isCurved: true,
-                    color: Colors.blue,
-                    barWidth: 4,
-                    spots: widget.spotsData,
+          scrollDirection: Axis.vertical,
+          child: SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Container(
+              width: 1000,
+              height: (lebar*10).toDouble(),
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: Colors.blue[50],
+                borderRadius: BorderRadius.circular(12),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.3),
+                    spreadRadius: 2,
+                    blurRadius: 6,
+                    offset: const Offset(0, 3),
                   ),
                 ],
+              ),
+              child: LineChart(
+                LineChartData(
+                  // clipData: FlClipData.none(),
+                  gridData: const FlGridData(show: true),
+                  titlesData: FlTitlesData(
+                    topTitles: const AxisTitles(
+                      sideTitles: SideTitles(
+                        showTitles: false,
+                      )
+                    ),
+                    rightTitles: const AxisTitles(
+                      sideTitles: SideTitles(
+                        showTitles: false,
+                      )
+                    ),
+                    bottomTitles: AxisTitles(
+                      sideTitles: SideTitles(
+                        showTitles: true,
+                        getTitlesWidget: (value, meta) {
+                          int hour = value.toInt();
+                          int minute = ((value-hour) * 60).toInt();
+                          return Text('$hour: ${minute.toString().padLeft(2, '0')}');
+                        },
+                        interval: 1,
+                      )
+                    ),
+                    leftTitles: AxisTitles(
+                      sideTitles: SideTitles(
+                        showTitles: true,
+                        getTitlesWidget: (value, meta) {
+                          int temp = value.toInt();
+                          if (temp%5 != 0){
+                            return const SizedBox.shrink();
+                          }
+                          return Text('$temp');
+                        },
+                        interval: 1,
+                      )
+                    )
+                  ),
+                  borderData: FlBorderData(show: false),
+                  lineBarsData: [
+                    LineChartBarData(
+                      isCurved: true,
+                      color: Colors.blue,
+                      barWidth: 4,
+                      spots: widget.spotsData,
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
