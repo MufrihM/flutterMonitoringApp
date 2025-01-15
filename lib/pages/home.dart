@@ -20,13 +20,6 @@ class _HomeScreenState extends State<HomeScreen> {
   String stringTemp = "";
   String stringHumid = "";
 
-  Future<void> clearAllData() async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.clear();
-    print('All SharedPreferences data cleared');
-    Navigator.pushReplacementNamed(context, '/login');
-  }
-
   @override
   void initState(){
     super.initState();
@@ -135,19 +128,6 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ],
               ),
-            ),
-            const SizedBox(),
-            // delete data
-            Container(
-              child: ElevatedButton(
-                onPressed: () async {
-                  await clearAllData();
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('All data cleared!'))
-                  );
-                },
-                child: Text('delete'),
-              )
             ),
           ],
         ),
