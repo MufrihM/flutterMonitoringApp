@@ -5,51 +5,79 @@ class ApiService{
   final String baseUrl = 'http://10.0.2.2:5000';
 
   // Get data temperature
-  Future<List<dynamic>> getTemp() async {
-    final response = await http.get(Uri.parse('$baseUrl/'));
+  Future<List<dynamic>> getTemp(String token) async {
+    final response = await http.get(
+        Uri.parse('$baseUrl/temp'),
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        }
+    );
 
     if (response.statusCode == 200){
       return jsonDecode(response.body);
     } else {
-      throw Exception('Failed to load data Temperature');
+      throw Exception('Failed to load data Temperature, Error: ${response.statusCode}');
     }
   }
 
-  //   Post data temperature
-  Future<void> postTemp(Map<String, dynamic> dataTemp) async {
-    final postTempUrl = Uri.parse('$baseUrl/temp');
-    try{
-      final response = await http.post(
-        postTempUrl,
-        headers: {'Content-Type': 'application/json'},
-        body: jsonEncode(dataTemp),
-      );
-      if (response.statusCode == 200) {
-        print('Data successfully saved to API');
-      } else {
-        print('Failed to save data to API: ${response.statusCode}');
-      }
-    } catch (e) {
-      print('Error sending data to API: $e');
+  Future<List<dynamic>> getHumid(String token) async {
+    final response = await http.get(
+        Uri.parse('$baseUrl/humid'),
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        }
+    );
+
+    if (response.statusCode == 200){
+      return jsonDecode(response.body);
+    } else {
+      throw Exception('Failed to load data Temperature, Error: ${response.statusCode}');
     }
   }
 
-  // post data humidity
-  Future<void> postHumidity(Map<String, dynamic> dataTemp) async {
-    final postHumidUrl = Uri.parse('$baseUrl/humid');
-    try{
-      final response = await http.post(
-        postHumidUrl,
-        headers: {'Content-Type': 'application/json'},
-        body: jsonEncode(dataTemp),
+  Future<Map<String, dynamic>> getProfile(String userId, String token) async {
+
+    final response = await http.get(
+        Uri.parse('$baseUrl/users/$userId'),
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+    );
+
+    if (response.statusCode == 200){
+      return jsonDecode(response.body);
+    } else if (response.statusCode == 404){
+      throw Exception('User not found');
+    } else {
+      throw Exception('Failed to load data Temperature, Error: ${response.statusCode}');
+    }
+  }
+
+  Future<Map<String, dynamic>> updateProfile(String userId, String token, Map<String, dynamic> updatedData) async {
+    final url = Uri.parse('$baseUrl/users/$userId');
+
+    try {
+      // Kirim permintaan HTTP PUT
+      final response = await http.put(
+        url,
+        headers: {
+          'Authorization': 'Bearer $token', // JWT token sebagai header
+          'Content-Type': 'application/json'
+        },
+        body: jsonEncode(updatedData), // Data yang akan diperbarui
       );
+
+      // Periksa status kode
       if (response.statusCode == 200) {
-        print('Data successfully saved to API');
+        return jsonDecode(response.body); // Data yang diperbarui
       } else {
-        print('Failed to save data to API: ${response.statusCode}');
+        throw Exception('Failed to update profile: ${response.body}');
       }
     } catch (e) {
-      print('Error sending data to API: $e');
+      throw Exception('Error updating profile: $e');
     }
   }
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../pages/profile.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget{
   final String pageName;
@@ -12,7 +13,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget{
   Widget build(BuildContext context) {
     return AppBar(
       title: Text(
-          '$pageName',
+          pageName,
           style: TextStyle(
             fontSize: 25,
             fontWeight: FontWeight.bold,
@@ -22,7 +23,12 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget{
       backgroundColor: Colors.blue,
       actions: [
         IconButton(
-            onPressed: () {},
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const ProfilePage())
+              );
+            },
             icon: const Icon(
                 Icons.account_circle_rounded,
                 size: 35,

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../services/auth_service.dart';
+import 'package:jwt_decode/jwt_decode.dart';
 
 class LoginScreen extends StatelessWidget {
   final TextEditingController usernameController = TextEditingController();
@@ -14,8 +15,20 @@ class LoginScreen extends StatelessWidget {
     final response = await api.login(username, password);
 
     if (response != null && response['access_token'] != null) {
+      // get the jwt token
+      String token = response['access_token'];
+      print('jwt token: $token');
+
+      // decode jwt token to get user_id
+      Map<String, dynamic> payload = Jwt.parseJwt(token);
+      print('payload: $payload');
+
+      String userId = payload['sub'];
+      print('user id: $userId');
+
       final prefs = await SharedPreferences.getInstance();
-      await prefs.setString('jwt_token', response['access_token']);
+      await prefs.setString('jwt_token', token);
+      await prefs.setString('user_id', userId);
       Navigator.pushReplacementNamed(context, '/');
     } else {
       showDialog(
@@ -34,7 +47,10 @@ class LoginScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Login')),
+      appBar: AppBar(
+          title: Text('Login'),
+          automaticallyImplyLeading: false,
+      ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(

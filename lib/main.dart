@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:monitoring_app/pages/register.dart';
 import 'mqtt/mqtt_service.dart';
-import 'services/api_service.dart';
 import 'pages/home.dart';
 import 'pages/login.dart';
 import 'components/loading_screen.dart';
 import 'pages/detail_suhu.dart';
 import 'pages/detail_lembap.dart';
+import 'package:dcdg/dcdg.dart';
 
 void main() {
   runApp(const MyApp());
@@ -21,20 +21,24 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   final MqttService mqttService = MqttService(
-    'broker.emqx.io',
-    ['/temp/demo', '/humid/demo'],
-    ApiService(),
+    'broker.hivemq.com',
+    ['temp/mufrih', 'humid/mufrih']
+    // ApiService(),
   );
 
-  String tempMessage = '';
-  String humidMessage = '';
+  double tempMessage = 0;
+  double humidMessage = 0;
 
-  void _onMessageReceived(String topic, String message) {
+  void _onMessageReceived(String topic, double message) {
     setState(() {
-      if (topic == '/temp/demo') {
+      if (topic == 'temp/mufrih') {
         tempMessage = message;
-      } else if (topic == '/humid/demo') {
+        print(message);
+        print(message.runtimeType);
+      } else if (topic == 'humid/mufrih') {
         humidMessage = message;
+        print(message);
+        print(message.runtimeType);
       }
     });
   }
@@ -62,7 +66,7 @@ class _MyAppState extends State<MyApp> {
         '/login': (context) => LoginScreen(),
         '/register': (context) => RegisterScreen(),
         '/home': (context) => HomeScreen(tempMessage: tempMessage, humidMessage: humidMessage),
-        '/suhu': (context) => TemperatureScreen(),
+        '/suhu': (context) => TemperatureScreen(currentTemp: tempMessage,),
         '/kelembapan': (context) => RiwayatSuhuPage()
       },
     );

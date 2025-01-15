@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:flutter/material.dart';
 
 class DataTerkini extends StatelessWidget {
@@ -36,7 +34,7 @@ class DataTerkini extends StatelessWidget {
           ),
           const SizedBox(height: 10,),
           Text(
-            '$currentData\u00B0C',
+            '$currentData',
             style: const TextStyle(
               fontSize: 40,
               fontWeight: FontWeight.bold,

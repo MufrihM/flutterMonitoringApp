@@ -1,19 +1,38 @@
 import 'package:flutter/material.dart';
 import '../components/custom_app_bar.dart';
 import '../components/custom_bottom_navbar.dart';
+import '../components/data_terkini.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HomeScreen extends StatefulWidget {
-  final String tempMessage;
-  final String humidMessage;
+  final double tempMessage;
+  final double humidMessage;
 
   // Constructor untuk menerima data dari main.dart
   HomeScreen({required this.tempMessage, required this.humidMessage});
+  // print(tempMessage);
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  String stringTemp = "";
+  String stringHumid = "";
+
+  Future<void> clearAllData() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.clear();
+    print('All SharedPreferences data cleared');
+    Navigator.pushReplacementNamed(context, '/login');
+  }
+
+  @override
+  void initState(){
+    super.initState();
+    stringTemp = "${widget.tempMessage}\u00b0C";
+    stringHumid = "${widget.humidMessage} %";
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -22,7 +41,8 @@ class _HomeScreenState extends State<HomeScreen> {
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            // ========== SUHU ============
+            // ====================== SUHU ===========================
+            // DataTerkini(currentData: stringTemp, dataName: "Suhu"),
             Container(
               padding: const EdgeInsets.all(16.0),
               decoration: BoxDecoration(
@@ -44,11 +64,11 @@ class _HomeScreenState extends State<HomeScreen> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       const Text(
-                          'Suhu',
-                          style: TextStyle(
-                            fontSize: 30,
-                            fontWeight: FontWeight.w700
-                          ),
+                        'Suhu',
+                        style: TextStyle(
+                          fontSize: 30,
+                          fontWeight: FontWeight.w700,
+                        ),
                       ),
                       const SizedBox(height: 8),
                       Text(
@@ -67,8 +87,11 @@ class _HomeScreenState extends State<HomeScreen> {
                 ],
               ),
             ),
+
             const SizedBox(height: 20),
-            // ========== Kelembapan ============
+            // ===================== KELEMBAPAN ======================
+            // DataTerkini(currentData: stringHumid, dataName: "Humid"),
+            // const SizedBox(height: 20),
             Container(
               padding: const EdgeInsets.all(16.0),
               decoration: BoxDecoration(
@@ -112,6 +135,19 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ],
               ),
+            ),
+            const SizedBox(),
+            // delete data
+            Container(
+              child: ElevatedButton(
+                onPressed: () async {
+                  await clearAllData();
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('All data cleared!'))
+                  );
+                },
+                child: Text('delete'),
+              )
             ),
           ],
         ),

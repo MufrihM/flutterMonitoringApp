@@ -14,8 +14,8 @@ class RiwayatSuhuPage extends StatefulWidget {
 }
 
 class _RiwayatSuhuPageState extends State<RiwayatSuhuPage> {
-  String currentData = "30.0";
-  String dataName = "Suhu Terkini";
+  String currentData = "83.2";
+  String dataName = "Kelembapan Terkini";
 
   List<Map<String, dynamic>> temperatureData = List.generate(
     40,
@@ -51,7 +51,7 @@ class _RiwayatSuhuPageState extends State<RiwayatSuhuPage> {
     // print(spots.length);
 
     return Scaffold(
-      appBar: const CustomAppBar(pageName: "Data Lembap"),
+      appBar: const CustomAppBar(pageName: "Kelembapan"),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: SingleChildScrollView(

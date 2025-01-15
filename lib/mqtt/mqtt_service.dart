@@ -7,12 +7,12 @@ import '../services/api_service.dart';
 class MqttService {
   final String broker;
   final List<String> topics;
-  final ApiService apiService;
+  // final ApiService apiService;
   MqttServerClient? client;
 
-  Function(String, String)? onMessageReceived;
+  Function(String, double)? onMessageReceived;
 
-  MqttService(this.broker, this.topics, this.apiService);
+  MqttService(this.broker, this.topics);
 
   Future<void> connect() async {
     client = MqttServerClient(broker, '');
@@ -54,20 +54,18 @@ class MqttService {
     final String message = MqttPublishPayload.bytesToStringAsString(recMess.payload.message);
     String topic = messages[0].topic;
     String currentTime = DateTime.now().toIso8601String();
+    double doubleValue = double.parse(message);
 
-    var dataMap = _parseJson(message);
+    print(message);
+    print(messages);
 
-    if (dataMap != null && onMessageReceived != null) {
-      onMessageReceived!(topic, dataMap['msg']);
-      final msgData = MessageData(dataMap['msg'], currentTime);
+    if (onMessageReceived != null) {
+      onMessageReceived!(topic, doubleValue);
 
-      if (topic == '/temp/demo') {
-        apiService.postTemp(msgData.toMap());
-      } else if (topic == '/humid/demo') {
-        apiService.postHumidity(msgData.toMap());
-      } else {
-        print('unknown topic');
-      }
+      // konversi data ke double
+      // double? numericValue = double.tryParse(message);
+    } else {
+      print("No message received");
     }
   }
 
