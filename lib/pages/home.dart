@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import '../components/custom_app_bar.dart';
 import '../components/custom_bottom_navbar.dart';
-import '../components/data_terkini.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../pages/login.dart';
 
 class HomeScreen extends StatefulWidget {
   final double tempMessage;
@@ -19,6 +19,17 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   String stringTemp = "";
   String stringHumid = "";
+
+  // Future<void> _logout() async {
+  //   final prefs = await SharedPreferences.getInstance();
+  //   await prefs.clear(); // Hapus semua data di shared_preferences
+  //   Navigator.pushAndRemoveUntil(
+  //     context,
+  //     MaterialPageRoute(builder: (context) => LoginScreen()),
+  //         (route) => false,
+  //   ); // Navigasi ke halaman login
+  // }
+
 
   @override
   void initState(){
@@ -129,6 +140,24 @@ class _HomeScreenState extends State<HomeScreen> {
                 ],
               ),
             ),
+            // const SizedBox(height: 10),
+            // ElevatedButton(
+            //     onPressed: _logout,
+            //     style: ElevatedButton.styleFrom(
+            //       backgroundColor: Colors.red,
+            //       padding: const EdgeInsets.symmetric(
+            //         horizontal: 40,
+            //         vertical: 15,
+            //       ),
+            //     ),
+            //     child: const Text(
+            //       'Logout',
+            //       style: TextStyle(
+            //         fontSize: 18,
+            //         color: Colors.white,
+            //       ),
+            //     )
+            // ),
           ],
         ),
       ),

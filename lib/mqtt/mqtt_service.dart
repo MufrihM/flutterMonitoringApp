@@ -1,18 +1,33 @@
+import 'dart:convert';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:mqtt_client/mqtt_client.dart';
 import 'package:mqtt_client/mqtt_server_client.dart';
-import 'dart:convert';
-import 'message_data.dart';
-import '../services/api_service.dart';
 
 class MqttService {
-  final String broker;
-  final List<String> topics;
-  // final ApiService apiService;
   MqttServerClient? client;
-
+  final String broker = 'broker.hivemq.com';
+  final FlutterLocalNotificationsPlugin notif = FlutterLocalNotificationsPlugin();
   Function(String, double)? onMessageReceived;
 
-  MqttService(this.broker, this.topics);
+  MqttService() {
+    // Initialize the notification plugin
+    const AndroidInitializationSettings initializationSettingsAndroid =
+        AndroidInitializationSettings('ic_launcher');
+    final InitializationSettings initializationSettings =
+        InitializationSettings(android: initializationSettingsAndroid);
+    notif.initialize(initializationSettings);
+  }
+
+  Future<void> _showNotification(String title, String body) async {
+    const androidPlatformChannelSpecifics = AndroidNotificationDetails(
+      'alert_channel', 'Alerts',
+      channelDescription: 'Notifications for alerts temperature and humidity',
+      importance: Importance.max, priority: Priority.high, showWhen: false,
+      icon: 'ic_launcher',
+    );
+    const platformChannelSpecifics = NotificationDetails(android: androidPlatformChannelSpecifics);
+    await notif.show(0, title, body, platformChannelSpecifics);
+  }
 
   Future<void> connect() async {
     client = MqttServerClient(broker, '');
@@ -39,50 +54,53 @@ class MqttService {
 
   void _subscribeToTopics() {
     if (client!.connectionStatus!.state == MqttConnectionState.connected) {
-      print('Connected to MQTT broker!');
-      for (String topic in topics) {
-        client!.subscribe(topic, MqttQos.atLeastOnce);
-      }
+      client!.subscribe('temp/mufrih', MqttQos.atMostOnce);
+      client!.subscribe('humid/mufrih', MqttQos.atMostOnce);
       client!.updates!.listen(_onMessage);
-    } else {
-      print('Failed to connect, status is ${client!.connectionStatus}');
+      print('Subscribed to topics');
     }
   }
 
-  void _onMessage(List<MqttReceivedMessage<MqttMessage>> messages) {
-    final MqttPublishMessage recMess = messages[0].payload as MqttPublishMessage;
+  void _onMessage(List<MqttReceivedMessage<MqttMessage>> event) {
+    final MqttPublishMessage recMess = event[0].payload as MqttPublishMessage;
     final String message = MqttPublishPayload.bytesToStringAsString(recMess.payload.message);
-    String topic = messages[0].topic;
-    String currentTime = DateTime.now().toIso8601String();
-    double doubleValue = double.parse(message);
+    final String topic = event[0].topic;
+    print('Message: $message from topic: $topic');
 
-    print(message);
-    print(messages);
-
-    if (onMessageReceived != null) {
-      onMessageReceived!(topic, doubleValue);
-
-      // konversi data ke double
-      // double? numericValue = double.tryParse(message);
-    } else {
-      print("No message received");
+    final data = jsonDecode(message);
+    if (data.containsKey('temp')) {
+      double tempValue = data['temp'].toDouble();
+      if(tempValue > 30){
+        _showNotification('Peringatan suhu!', 'Suhu melebihi batas: ${tempValue}\u00b0C');
+      }
+      if (onMessageReceived != null) {
+        onMessageReceived!(topic, tempValue);
+      }
     }
+    if (data.containsKey('humid')) {
+      double humidValue = data['humid'].toDouble();
+      if(humidValue < 80){
+        _showNotification('Peringata kelembapan!', 'Kelembapan melebihi batas: ${humidValue}%');
+      }
+      if (onMessageReceived != null) {
+        onMessageReceived!(topic, humidValue);
+      }
+    }
+  }
+
+  void _onDisconnected() {
+    print('Disconnected');
+  }
+
+  void _onConnected() {
+    print('Connected to MQTT');
+  }
+
+  void _onSubscribed(String topic) {
+    print('Subscribed to $topic');
   }
 
   void disconnect() {
     client?.disconnect();
   }
-
-  Map<String, dynamic>? _parseJson(String jsonData) {
-    try {
-      return jsonDecode(jsonData);
-    } catch (e) {
-      print('Error parsing message: $e');
-      return null;
-    }
-  }
-
-  void _onConnected() => print('Connected to broker');
-  void _onDisconnected() => print('Disconnected from broker');
-  void _onSubscribed(String topic) => print('Subscribed to topic: $topic');
 }

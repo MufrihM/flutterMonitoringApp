@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class TableData extends StatelessWidget {
   final String tableName;
   final String tema;
-  final List tableList;
+  final List<dynamic> tableList;
 
   const TableData({
     required this.tableName,
@@ -75,15 +75,15 @@ class TableData extends StatelessWidget {
                       children: [
                         Padding(
                           padding: const EdgeInsets.all(8.0),
-                          child: Text(data['id'].toString()),
+                          child: Text("1"),
                         ),
                         Padding(
                           padding: const EdgeInsets.all(8.0),
-                          child: Text("${data['content']}\u00B0C"),
+                          child: Text("${data['message']}\u00B0C"),
                         ),
                         Padding(
                           padding: const EdgeInsets.all(8.0),
-                          child: Text(data['time']),
+                          child: Text(data['timestamp']),
                         ),
                       ]
                     ))

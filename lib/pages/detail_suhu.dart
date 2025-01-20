@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:fl_chart/fl_chart.dart';
-import 'package:monitoring_app/services/api_service.dart';
+import '../services/api_service.dart';
 import '../components/custom_app_bar.dart';
 import '../components/custom_bottom_navbar.dart';
 import '../components/data_terkini.dart';
@@ -22,7 +21,7 @@ class TemperatureScreen extends StatefulWidget {
 
 class _TemperatureScreenState extends State<TemperatureScreen> {
   ApiService apiService = ApiService();
-  List<dynamic> tempData = [];
+  List<dynamic> tempList = [];
   bool isLoading = true;
   String stringTemp = "";
 
@@ -43,9 +42,9 @@ class _TemperatureScreenState extends State<TemperatureScreen> {
     try{
       final jwtToken = await _getJwtToken();
       List<dynamic> data = await apiService.getTemp(jwtToken);
-      print("JWT TOKEN: $jwtToken");
+      print(data);
       setState(() {
-        tempData = data;
+        tempList = data;
         isLoading = false;
       });
     } catch (e) {
@@ -56,41 +55,8 @@ class _TemperatureScreenState extends State<TemperatureScreen> {
     }
   }
 
-  // convert data temperatureDetails to FlSpots
-  List<FlSpot> getTemperatureSpots(List< dynamic> data) {
-    return data.asMap().entries.map((entry) {
-      int index = entry.key;
-      double temperature = entry.value['message']; // Ambil nilai suhu
-
-      // Konversi waktu ke nilai x, jika dibutuhkan
-      String time = entry.value['timeStamp']; // Contoh: '10:00'
-      List<String> timeParts = time.split(':');
-      double xValue = double.parse(timeParts[0]) + (double.parse(timeParts[1]) / 60); // 10:30 -> 10.5
-
-      return FlSpot(xValue, temperature); // (x = waktu, y = suhu)
-    }).toList();
-  }
-
-  // Fungsi untuk memilih tanggal
-  // Future<void> _selectDate(BuildContext context) async {
-  //   final DateTime? pickedDate = await showDatePicker(
-  //     context: context,
-  //     initialDate: selectedDate,
-  //     firstDate: DateTime(2022),
-  //     lastDate: DateTime.now(),
-  //   );
-  //   if (pickedDate != null && pickedDate != selectedDate) {
-  //     setState(() {
-  //       selectedDate = pickedDate;
-  //     });
-  //   }
-  // }
-
   @override
   Widget build(BuildContext context) {
-    List<FlSpot> spots = getTemperatureSpots(tempData);
-    print(spots);
-
     return Scaffold(
       appBar: const CustomAppBar(pageName: "Data Suhu"),
       body: Padding(
@@ -105,11 +71,11 @@ class _TemperatureScreenState extends State<TemperatureScreen> {
               const SizedBox(height: 20),
 
               // ============== Grafik RIwayat Suhu ===============
-              // GrafikData(spotsData: spots, grafikName: "Riwayat Suhu"),
+              GrafikData(dataList: tempList, grafikName: "Riwayat Suhu"),
               const SizedBox(height: 20),
 
               // ========== Table Riwayat Suhu ========
-              // TableData(tableName: "Data Riwayat Suhu", tema: "Suhu", tableList: temperatureDetails),
+              TableData(tableName: "Data Riwayat Suhu", tema: "Suhu", tableList: tempList),
             ],
           ),
         ),

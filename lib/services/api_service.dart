@@ -33,7 +33,7 @@ class ApiService{
     if (response.statusCode == 200){
       return jsonDecode(response.body);
     } else {
-      throw Exception('Failed to load data Temperature, Error: ${response.statusCode}');
+      throw Exception('Failed to load data Humidity, Error: ${response.statusCode}');
     }
   }
 
